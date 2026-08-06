@@ -1,0 +1,35 @@
+reminders:
+  - id: example-vitamins
+    title: Take vitamins
+    message: "Reminder: take your vitamins."
+    enabled: false
+    schedule:
+      kind: weekdays
+      days:
+        - mon
+        - wed
+        - fri
+    preferred_time: "09:00:00"
+    timezone: America/Sao_Paulo
+  - id: example-every-other
+    title: Water the plants
+    message: "Every other day — water the plants."
+    enabled: false
+    schedule:
+      kind: interval
+      every_n_days: 2
+      start_date: "2026-08-05"
+    preferred_time: "18:00:00"
+    timezone: America/Sao_Paulo
+  - id: example-twice-week
+    title: Gym
+    message: "Gym day — get moving."
+    enabled: false
+    schedule:
+      kind: times_per_week
+      times: 2
+      days:
+        - tue
+        - thu
+    preferred_time: "07:30:00"
+    timezone: America/Sao_Paulo

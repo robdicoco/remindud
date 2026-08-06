@@ -1,0 +1,29 @@
+[project]
+name = "remindud"
+version = "0.1.0"
+description = "Calendar reminders delivered to Discord via webhook"
+readme = "README.md"
+authors = [
+    { name = "robdicoco", email = "pavusa@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "httpx>=0.28.1",
+    "pydantic>=2.13.4",
+    "pyyaml>=6.0.3",
+    "streamlit>=1.61.1",
+    "tzdata>=2026.3",
+]
+
+[project.scripts]
+remindud = "remindud.runner:main"
+
+[build-system]
+requires = ["uv_build>=0.9.5,<0.10.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.16.1",
+]

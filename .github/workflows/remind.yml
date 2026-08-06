@@ -1,0 +1,63 @@
+name: Remindud
+
+on:
+  schedule:
+    # Twice daily (UTC). Morning + afternoon catch preferred_time windows.
+    - cron: "0 11 * * *"   # 11:00 UTC
+    - cron: "0 20 * * *"   # 20:00 UTC
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (do not call Discord)"
+        type: boolean
+        default: false
+      ignore_preferred_time:
+        description: "Ignore preferred_time and send if due today"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  send-reminders:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.13
+
+      - name: Install project
+        run: uv sync --frozen
+
+      - name: Run remindud
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          ARGS=()
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; then
+            ARGS+=(--dry-run)
+          fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.ignore_preferred_time }}" = "true" ]; then
+            ARGS+=(--ignore-preferred-time)
+          fi
+          uv run remindud "${ARGS[@]}"
+
+      - name: Commit state if changed
+        run: |
+          if git diff --quiet -- data/state.json; then
+            echo "No state changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/state.json
+          git commit -m "chore: update remindud send state"
+          git push
