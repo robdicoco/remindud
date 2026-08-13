@@ -265,7 +265,7 @@ def render_list() -> None:
 
 def main() -> None:
     st.title("Remindud")
-    st.caption("Calendar reminders → Discord webhook. Edit here; GitHub Actions sends them.")
+    st.caption("Calendar reminders → Discord webhook. Edit here; send only when you run the sender.")
     render_list()
     st.divider()
 
@@ -281,7 +281,7 @@ def main() -> None:
             """
 1. Save reminders here (writes `data/reminders.yaml`).
 2. Commit & push the file.
-3. GitHub Actions runs **twice daily**, checks schedules, and posts to your Discord webhook.
+3. Delivery is **manual** — run `uv run remindud` locally, or start the GitHub Actions workflow yourself. There is no scheduled autorun.
 4. `data/state.json` records the last send date so each reminder fires at most once per day.
             """
         )

@@ -2,7 +2,7 @@
 
 Calendar reminders delivered to Discord via webhook.
 
-Configure events in a Streamlit UI (or by editing YAML). Delivery runs in the background — locally with `uv run remindud`, or on a schedule with GitHub Actions twice a day.
+Configure events in a Streamlit UI (or by editing YAML). Delivery is **manual only** — locally with `uv run remindud`, or by running the GitHub Actions workflow yourself. There is no scheduled autorun.
 
 ## Features
 
@@ -53,7 +53,7 @@ uv run remindud --force example-vitamins
 
 Workflow: `.github/workflows/remind.yml`
 
-- Cron: **11:00 UTC** and **20:00 UTC** (twice daily)
+- No cron / scheduled autorun — the workflow only runs when you start it
 - Manual run: Actions → Remindud → Run workflow
 - After a successful send, updated `data/state.json` is committed back so the next run does not double-send
 
@@ -73,4 +73,4 @@ data/
 
 ## Schedule notes
 
-Actions may run before a reminder’s `preferred_time`. That run skips it; the later daily run picks it up once the preferred time has passed. Use `--ignore-preferred-time` (or the workflow input) to send as soon as the calendar day matches.
+A reminder is sent only when you run the sender and that calendar day matches. If you run it before `preferred_time`, it is skipped unless you pass `--ignore-preferred-time` (or the workflow input).
